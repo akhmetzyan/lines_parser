@@ -64,18 +64,24 @@ app.post '/uploadfiles', (req, res) ->
 	match = []
 	zip = new zipok()
 	for one, i in file1
-		folder = zip.folder one
+		flag = false
 		match.push {one: one, mults: []}
 		j=-1
 		while(true)
 			j++
 			break if (j or j+1) is file2.length
 			if file2[j].toLowerCase().indexOf(one.toLowerCase()) > -1
+				if not flag
+					folder = zip.folder one
+					flag = true
 				match[match.length-1].mults.push file2[j]
 				folder.file file2[j]+'.txt', ''
 				file2.splice j, 1
 				j--
-
+	folder = zip.folder 'Noname'
+	for i in file2
+		if file2[i] != undefined
+			folder.file file2[i]+'.txt', ''
 	zip.writeToFile './app/file.zip'
 	csv './app/file.csv', match, file2
 	res.json {status: 1}
