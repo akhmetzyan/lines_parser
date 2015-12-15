@@ -79,9 +79,12 @@ app.post '/uploadfiles', (req, res) ->
 				file2.splice j, 1
 				j--
 	folder = zip.folder 'Noname'
-	for i in file2
+	i=0
+	while(true)
 		if file2[i] != undefined
 			folder.file file2[i]+'.txt', ''
+		i++
+		break if (i or i+1) is file2.length
 	zip.writeToFile './app/file.zip'
 	csv './app/file.csv', match, file2
 	res.json {status: 1}
